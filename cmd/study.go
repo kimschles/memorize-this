@@ -27,7 +27,7 @@ import (
 
 // studyCmd represents the study command
 var studyCmd = &cobra.Command{
-	Use:   "study",
+	Use:   "study <file-name>",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -61,6 +61,9 @@ func readFile(args []string) {
 	handleErr(err)
 
 	reader := csv.NewReader(file)
+
+	var questions []string
+
 	for {
 		record, err := reader.Read()
 		if err == io.EOF {
@@ -68,9 +71,11 @@ func readFile(args []string) {
 		}
 		handleErr(err)
 		// appended to a slice?
-		fmt.Println(record)
+		questions = append(questions, record[0])
+
 		err = file.Close()
 	}
+	fmt.Println(questions)
 }
 
 func handleErr(err error) {
