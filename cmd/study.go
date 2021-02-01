@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"bufio"
 	"encoding/csv"
 	"fmt"
 	"io"
@@ -63,6 +64,7 @@ func readFile(args []string) {
 	reader := csv.NewReader(file)
 
 	var questions []string
+	var answers []string
 
 	for {
 		record, err := reader.Read()
@@ -72,14 +74,33 @@ func readFile(args []string) {
 		handleErr(err)
 		// appended to a slice?
 		questions = append(questions, record[0])
+		answers = append(answers, record[1])
 
-		err = file.Close()
+		// err = file.Close()
 	}
-	fmt.Println(questions)
+	askQuestion(questions[0])
+	showAnswer(answers[0])
+	recordDifficultyRating()
 }
 
 func handleErr(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func askQuestion(question string) {
+	fmt.Println(question)
+}
+
+func showAnswer(answer string) {
+	fmt.Println(answer)
+}
+
+func recordDifficultyRating() {
+	fmt.Println("Easy (E) or Hard (H)?")
+	inputReader := bufio.NewReader(os.Stdin)
+	userText, err := inputReader.ReadString('\n')
+	handleErr(err)
+	fmt.Println(userText)
 }
